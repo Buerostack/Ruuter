@@ -74,14 +74,15 @@ public class DslService {
     }
 
     public Map<String, Map<String, Map<String, Dsl>>> getDsls(String configPath) {
-        openApiBuilder = new OpenApiBuilder("BYK", "1.0");
 
+        if (openApiBuilder == null)
+            openApiBuilder = new OpenApiBuilder("BYK", "1.0");
 
         Map<String, Map<String, Map<String, Dsl>>> _dsls =
                 Arrays.stream(Objects.requireNonNull(new File(configPath).listFiles(File::isDirectory)))
                         .collect(toMap(File::getName, f -> getDslsForProject(configPath+"/" + f.getName()+"/")));
 
-        log.info("Built OpenAPI spec: " + Yaml.pretty(getOpenAPISpec()));
+        log.info("Built OpenAPI spec (pretty): " + Yaml.pretty(getOpenAPISpec()));
 
         return _dsls;
     }
