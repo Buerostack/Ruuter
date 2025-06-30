@@ -60,9 +60,8 @@ public class OpenApiBuilder {
 
             pathItem.post( new Operation().requestBody(requestBody)
                 .responses(new ApiResponses().addApiResponse("200", success)));
-        } else if (declaration.getMethod().toUpperCase().equals("GET")) {
-
-            if (declaration.getAllowlist() != null && declaration.getAllowlist().getBody() != null) {
+        } else if (declaration.getMethod().equalsIgnoreCase("GET") &&
+            declaration.getAllowlist() != null && declaration.getAllowlist().getBody() != null) {
                 declaration.getAllowlist().getParams().forEach(
                     field -> {
                         Parameter requestParam = new Parameter();
@@ -71,7 +70,6 @@ public class OpenApiBuilder {
                         pathItem.get(new Operation().addParametersItem(requestParam));
                     }
                 );
-            }
         }
 
         pathItem.setDescription(declaration.getDescription());

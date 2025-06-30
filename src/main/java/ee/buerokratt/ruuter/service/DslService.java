@@ -131,10 +131,8 @@ public class DslService {
     }
 
     public Map<String, Map<String, Dsl>> getGuardsForProject(String projectPath) {
-        Map<String, Map<String, Dsl>> _dsls =
-            Arrays.stream(Objects.requireNonNull(new File(projectPath).listFiles(File::isDirectory)))
+        return Arrays.stream(Objects.requireNonNull(new File(projectPath).listFiles(File::isDirectory)))
                 .collect(toMap(File::getName, this::extractGuard));
-        return _dsls;
     }
 
     private Map<String, Dsl> extractGuard(File directory) {
