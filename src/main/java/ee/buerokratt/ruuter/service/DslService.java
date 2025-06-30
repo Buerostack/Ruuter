@@ -294,6 +294,11 @@ public class DslService {
     }
 
     <V> void checkFields(Map<String, V> requestFields, List<String> requestedFields) {
+
+        // Skip check if no fields are requested
+        if (requestedFields == null)
+            return;
+
         requestedFields.forEach((field) -> {
                 if (!requestFields.containsKey(field)) {
                     String message = "Field missing: %s".formatted(field);
