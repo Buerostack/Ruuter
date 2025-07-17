@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -82,7 +81,7 @@ public class DslService {
                 Arrays.stream(Objects.requireNonNull(new File(configPath).listFiles(File::isDirectory)))
                         .collect(toMap(File::getName, f -> getDslsForProject(configPath+"/" + f.getName()+"/")));
 
-        log.info("Built OpenAPI spec (pretty): " + Yaml.pretty(getOpenAPISpec()));
+        log.debug("Built OpenAPI spec (pretty): " + Yaml.pretty(getOpenAPISpec()));
 
         return _dsls;
     }
@@ -157,7 +156,7 @@ public class DslService {
     }
 
     public DslInstance execute(String project, String dslName, String requestType, Map<String, Object> requestBody, Map<String, Object> requestQuery, Map<String, String> requestHeaders, String requestOrigin, String contentType) {
-        log.debug("Loading DSL: "+ dslName + " from project: " + project);
+        log.info("Loading DSL: "+ dslName + " from project: " + project);
 
         String _dslName=requestType.toUpperCase()+"/"+dslName;
 
@@ -184,8 +183,22 @@ public class DslService {
             }
 
             log.debug("body after: "+ LoggingUtils.mapDeepToString(requestBody));
-        } else {
+        } else if (dslName == ""){
             log.info("DSL in project "+ project+" not found: "+dslName);
+            return null;
+        } else {
+            // handle path parameters recursively
+            String lastParam = dslName.substring(dslName.lastIndexOf('/')+1);
+            dslName = dslName.substring(0, dslName.lastIndexOf('/'));
+            if (requestQuery.get("pathParams") == null)
+                requestQuery.put("pathParams", new ArrayList<String>());
+
+            ((List<String>) requestQuery.get("pathParams")).add(0, lastParam);
+
+            log.info("EXECUTING "+dslName +
+                " WITH PATH PARAMS " + requestQuery.get("pathParams") +
+                " (LAST + " + lastParam + " )");
+            return execute(project, dslName, requestType, requestBody, requestQuery, requestHeaders, requestOrigin, contentType);
         }
 
         DslInstance di = new DslInstance(dslName,
