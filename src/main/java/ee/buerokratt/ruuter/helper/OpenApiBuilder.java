@@ -33,7 +33,8 @@ public class OpenApiBuilder {
         DeclarationStep declaration = dsl.getDeclaration();
 
         PathItem pathItem = new PathItem();
-        if (declaration.getMethod().toUpperCase().equals("POST")) {
+        if (declaration.getMethod().toUpperCase().equals("POST")
+        || declaration.getMethod().toUpperCase().equals("PUT")) {
             RequestBody requestBody = new RequestBody();
             Schema requestBodySchema = new Schema();
             requestBodySchema.setType("object");
