@@ -156,7 +156,7 @@ public class DslService {
     }
 
     public DslInstance execute(String project, String dslName, String requestType, Map<String, Object> requestBody, Map<String, Object> requestQuery, Map<String, String> requestHeaders, String requestOrigin, String contentType) {
-        log.info("Loading DSL: "+ dslName + " from project: " + project);
+        log.debug("Loading DSL: "+ dslName + " from project: " + project);
 
         String _dslName=requestType.toUpperCase()+"/"+dslName;
 
@@ -195,9 +195,8 @@ public class DslService {
 
             ((List<String>) requestQuery.get("pathParams")).add(0, lastParam);
 
-            log.info("EXECUTING "+dslName +
-                " WITH PATH PARAMS " + requestQuery.get("pathParams") +
-                " (LAST + " + lastParam + " )");
+            log.debug("Executing "+dslName +
+                " with path parameters " + requestQuery.get("pathParams");
             return execute(project, dslName, requestType, requestBody, requestQuery, requestHeaders, requestOrigin, contentType);
         }
 
