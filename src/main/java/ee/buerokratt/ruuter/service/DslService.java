@@ -313,13 +313,20 @@ public class DslService {
 
         requestedFields.forEach((field) -> {
                 if (!requestFields.containsKey(field)) {
+
+                    log.warn("Request has errors: field(s) missing: %s".formatted(field));
+
+                    /** CURRENTLY REPLACED WITH WARNING, SEE Ruuter#369 **/
+                    /*
                     String message = "Field missing: %s".formatted(field);
+
                     if (properties.getLogging().getPrintStackTrace() != null && properties.getLogging().getPrintStackTrace())
                         throw new StepExecutionException("declare", new Exception(message));
                     else {
                         log.error(message);
                         Thread.currentThread().interrupt();
                     }
+                    */
                 }
             }
         );
