@@ -195,7 +195,7 @@ public class DslService {
 
             ((List<String>) requestQuery.get("pathParams")).add(0, lastParam);
 
-            log.debug("Executing "+dslName +
+            log.debug("Executing " + dslName +
                 " with path parameters " + requestQuery.get("pathParams"));
             return execute(project, dslName, requestType, requestBody, requestQuery, requestHeaders, requestOrigin, contentType);
         }
