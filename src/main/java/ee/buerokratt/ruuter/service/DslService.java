@@ -197,7 +197,7 @@ public class DslService {
             }
 
             log.debug("body after: "+ LoggingUtils.mapDeepToString(requestBody));
-        } else if (dslName == ""){
+        } else if (dslName.isBlank()){
             log.info("DSL in project "+ project+" not found: "+dslName);
             return null;
         } else {
@@ -230,7 +230,7 @@ public class DslService {
             if ( !allowedToExecuteDSLFrom(di, requestOrigin, requestHeaders.get("referer"))) {
                 LoggingUtils.logError(log, "Internal DSL not allowed: %s (%s)".formatted(dslName, requestOrigin), requestOrigin, INCOMING_RESPONSE);
                 return di;
-            };
+            }
 
             Dsl _guard =  getGuard(project,requestType.toUpperCase(), dslName);
 
@@ -328,20 +328,7 @@ public class DslService {
 
         requestedFields.forEach((field) -> {
                 if (!requestFields.containsKey(field)) {
-
                     log.warn("Request has errors: field(s) missing: %s".formatted(field));
-
-                    /** CURRENTLY REPLACED WITH WARNING, SEE Ruuter#369 **/
-                    /*
-                    String message = "Field missing: %s".formatted(field);
-
-                    if (properties.getLogging().getPrintStackTrace() != null && properties.getLogging().getPrintStackTrace())
-                        throw new StepExecutionException("declare", new Exception(message));
-                    else {
-                        log.error(message);
-                        Thread.currentThread().interrupt();
-                    }
-                    */
                 }
             }
         );

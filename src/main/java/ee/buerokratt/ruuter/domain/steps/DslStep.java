@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import io.opentelemetry.api.trace.Span;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 
 @Slf4j
 @Data
@@ -51,9 +50,9 @@ public abstract class DslStep {
             di.setErrorMessage(e.getMessage());
             di.setErrorStatus(HttpStatus.INTERNAL_SERVER_ERROR);
             throw new StepExecutionException(name, e);
-        } /* finally {
+        }  finally {
             newSpan.end();
-        } */
+        }
     }
 
     protected void handleFailedResult(DslInstance di) throws DSLExecutionException {
