@@ -6,6 +6,7 @@ import ee.buerokratt.ruuter.domain.DslInstance;
 import ee.buerokratt.ruuter.domain.steps.DslStep;
 import ee.buerokratt.ruuter.helper.*;
 import ee.buerokratt.ruuter.helper.exception.LoadDslsException;
+import ee.buerokratt.ruuter.service.exception.DSLExecutionException;
 import ee.buerokratt.ruuter.service.exception.StepExecutionException;
 import ee.buerokratt.ruuter.util.FileUtils;
 import ee.buerokratt.ruuter.util.LoggingUtils;
@@ -145,17 +146,30 @@ public class DslService {
         }
     }
 
-    public DslInstance execute(String dsl, String requestType, Map<String, Object> requestBody, Map<String, Object> requestQuery, Map<String, String> requestHeaders, String requestOrigin) {
-        return execute(dsl, requestType, requestBody, requestQuery, requestHeaders, requestOrigin, this.getClass().getName());
+    public DslInstance execute(String dsl,
+                               String requestType,
+                               Map<String, Object> requestBody,
+                               Map<String, Object> requestQuery,
+                               Map<String, String> requestHeaders,
+                               String requestOrigin)
+                throws DSLExecutionException {
+        try {
+            return execute(dsl, requestType, requestBody, requestQuery, requestHeaders,
+                requestOrigin, this.getClass().getName());
+        } catch (StepExecutionException stepEx) {
+            throw new DSLExecutionException(stepEx.getStepName(), dsl, stepEx.getCause());
+        }
     }
 
-    public DslInstance execute(String dsl, String requestType, Map<String, Object> requestBody, Map<String, Object> requestQuery, Map<String, String> requestHeaders, String requestOrigin, String contentType) {
+    public DslInstance execute(String dsl, String requestType, Map<String, Object> requestBody, Map<String, Object> requestQuery, Map<String, String> requestHeaders, String requestOrigin, String contentType)
+        throws StepExecutionException, DSLExecutionException {
         String project = dsl.substring(0, dsl.indexOf('/'));
         dsl = dsl.substring(dsl.indexOf('/')+1);
         return execute(project, dsl, requestType, requestBody, requestQuery,requestHeaders, requestOrigin, contentType);
     }
 
-    public DslInstance execute(String project, String dslName, String requestType, Map<String, Object> requestBody, Map<String, Object> requestQuery, Map<String, String> requestHeaders, String requestOrigin, String contentType) {
+    public DslInstance execute(String project, String dslName, String requestType, Map<String, Object> requestBody, Map<String, Object> requestQuery, Map<String, String> requestHeaders, String requestOrigin, String contentType)
+        throws StepExecutionException, DSLExecutionException {
         log.debug("Loading DSL: "+ dslName + " from project: " + project);
 
         String _dslName=requestType.toUpperCase()+"/"+dslName;
@@ -232,6 +246,7 @@ public class DslService {
                     properties, scriptingHelper, mappingHelper, httpHelper, tracer, openSearchSender);
 
                 LoggingUtils.logInfo(log, "Executing guard for DSL: %s".formatted(dslName), requestOrigin, INCOMING_REQUEST);
+
                 guard.execute();
 
                 // In case the guard does not specifically return a status code or throw an exception, it
