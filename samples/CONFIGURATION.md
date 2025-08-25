@@ -250,8 +250,8 @@ This functionality can be changed with setting `allowDuplicateRequestKeys` to fa
 
 ### API service testing flow
 
-If requests to Ruuter are sent with header that is defined in
-`application.apiRequestTestingKey`, Ruuter responds with error
+If requests to Ruuter are sent with header 'x-ruuter-testing'
+with value that is defined in `application.apiRequestTestingKey`, Ruuter responds with error
 object if any errors occur. 
 
 Error object: 
@@ -260,7 +260,8 @@ Error object:
     {
         "dslName": <DSL where error occured>,
         "stepName": <DSL step with error>,
-        "causeCode": <error code>
+        "causeCode": <error code>,
+        "message": <error message (usually Exception header)>
     }
 ```
 
