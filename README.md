@@ -10,7 +10,7 @@ Ruuter's original repository is https://github.com/buerokratt/Ruuter
 
 ## 
 
-This cleaned repository is maintained by Rainer Türner starting from September 10, 2025, with an intention to have clean version of Ruuter to work on, without affecting its owner RIA.
+This cleaned repository is maintained by Rainer Türner starting from September 10, 2025, with an intention to have a clean version of Ruuter to work on, without affecting its owner RIA.
 
 ## Quick start
 
