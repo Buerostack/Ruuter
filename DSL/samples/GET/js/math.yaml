@@ -1,0 +1,29 @@
+extract:
+  assign:
+    a: ${parseFloat(incoming.params.a)}
+    b: ${parseFloat(incoming.params.b)}
+  next: validate
+
+validate:
+  switch:
+    - condition: ${Number.isNaN(a) || Number.isNaN(b)}
+      next: bad_request
+
+define_output:
+  assign:
+    output:
+      a: ${a}
+      b: ${b}
+      sum: ${a + b}
+      diff: ${a - b}
+      prod: ${a * b}
+      avg: ${(a + b) / 2}
+
+response:
+  return: ${output}
+  next: end
+
+bad_request:
+  status: 400
+  return: "Provide numeric `a` and `b`"
+  next: end

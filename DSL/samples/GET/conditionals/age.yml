@@ -1,0 +1,35 @@
+extract:
+  assign:
+    age: ${parseFloat(incoming.params.age)}
+  next: validate
+
+validate:
+  switch:
+    - condition: ${Number.isNaN(age)}
+      next: bad_request
+    - condition: ${age >= 18}
+      next: define_adult
+  next: define_minor
+
+define_adult:
+  assign:
+    output:
+      age: ${age}
+      isAdult: true
+  next: response
+
+define_minor:
+  assign:
+    output:
+      age: ${age}
+      isAdult: false
+  next: response
+
+response:
+  return: ${output}
+  next: end
+
+bad_request:
+  status: 400
+  return: "Provide numeric 'age' value as a GET paramater (e.g. '?age=17.5')"
+  next: end

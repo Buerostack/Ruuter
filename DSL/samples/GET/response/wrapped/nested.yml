@@ -1,0 +1,10 @@
+assign_values:
+  assign:
+    output:
+      some: example
+      json:
+        content: provided
+
+response:
+  return: ${output}
+  next: end

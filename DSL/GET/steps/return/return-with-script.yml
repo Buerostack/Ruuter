@@ -1,6 +1,0 @@
-assign_step:
-  assign:
-    variable: "result"
-
-return_value:
-  return: ${variable}

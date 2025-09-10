@@ -1,0 +1,7 @@
+response:
+  wrapper: false
+  headers:
+    X-Service: Custom headers demo
+    X-Version: v0.1
+    X-Vary: "Origin, Accept-Encoding"
+  return: true

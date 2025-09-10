@@ -1,0 +1,2 @@
+response_ok:
+  return: ?q=${incoming.params.q ?? "N/A"}

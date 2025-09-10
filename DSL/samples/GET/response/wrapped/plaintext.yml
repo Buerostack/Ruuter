@@ -1,0 +1,3 @@
+response:
+  return: This output will be provided as plaintext within a JSON response wrapper
+  next: end

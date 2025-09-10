@@ -1,0 +1,17 @@
+define_output:
+  assign:
+    output:
+      this:
+        is: some
+        nested: array
+        destined:
+          to:
+            be: downloaded
+
+response:
+  wrapper: false
+  headers:
+    Content-Type: application/json
+    Content-Disposition: attachment; filename="example.json"
+  return: ${output}
+  next: end

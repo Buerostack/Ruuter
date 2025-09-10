@@ -1,0 +1,5 @@
+response:
+  status: 401
+  headers:
+    WWW-Authenticate: Bearer realm="example", error="invalid_token"
+  return: "Unauthorized"

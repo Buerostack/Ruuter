@@ -1,0 +1,25 @@
+validate:
+  switch:
+    - condition: ${!incoming.body || !incoming.body.username || !incoming.body.password}
+      next: bad_request
+  next: issue_token
+
+issue_token:
+  assign:
+    mock_token:
+      user: ${incoming.body.username}
+      token: "${'tok-' + Math.random().toString(36).slice(2)}"
+      expiresAt: "${new Date(Date.now() + 60*60*1000).toISOString()}"
+  next: response
+
+response:
+  headers:
+    X-Client-Token: ${mock_token.token}
+    X-Client-Token-Expires: ${mock_token.expiresAt}
+  return: ${mock_token}
+  next: end
+
+bad_request:
+  status: 400
+  return: Missing at least one of the required fields 'username, password'
+  next: end

@@ -1,0 +1,20 @@
+extract_params:
+  assign:
+    lang: ${incoming.params.lang}
+    q: ${incoming.params.q}
+  next: validate
+
+validate:
+  switch:
+    - condition: ${lang == null || lang == "" || q == null || q == ""}
+      next: bad_request
+  next: response
+
+response:
+  return: ?lang=${lang}&q=${q}
+  next: end
+
+bad_request:
+  status: 400
+  return: "Parameters `lang` and `q` are expected, but at least one of them is missing"
+  next: end

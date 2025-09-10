@@ -1,0 +1,6 @@
+logstep:
+  log: This DSL does nothing other than explicitly show in Ruuter logs this line of information. It's meant to ease debugging.
+
+response:
+  status: 418
+  return: See Ruuter logs for details

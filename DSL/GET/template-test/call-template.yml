@@ -1,6 +1,0 @@
-
-logstep:
-  log: "executed main step"
-
-returnstep:
-  return: "OK"

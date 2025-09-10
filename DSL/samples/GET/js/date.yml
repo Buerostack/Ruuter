@@ -1,0 +1,2 @@
+current_ts:
+  return: ${new Date().toISOString()}

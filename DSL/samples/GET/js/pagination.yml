@@ -1,0 +1,16 @@
+extract:
+  assign:
+    page: ${Math.max(1, parseInt(incoming.params.page ?? "1"))}
+    size: ${Math.max(1, Math.min(100, parseInt(incoming.params.size ?? "20")))}
+    offset: ${(page - 1) * size}
+
+define_output:
+  assign:
+    output:
+      page: ${page}
+      size: ${size}
+      offset: ${offset}
+      limit: ${size}
+
+response:
+  return: ${output}

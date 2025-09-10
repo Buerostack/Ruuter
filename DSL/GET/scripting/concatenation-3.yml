@@ -1,6 +1,0 @@
-first_step:
-  assign:
-    variable: "test"
-
-second_step:
-  return: PREFIX-${variable}

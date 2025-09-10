@@ -1,0 +1,10 @@
+define_output:
+  assign:
+    output:
+      nowIso: ${new Date().toISOString()}
+      epochMs: ${Date.now()}
+      plus1hIso: ${new Date(Date.now() + 60*60*1000).toISOString()}
+
+response:
+  return: ${output}
+  next: end

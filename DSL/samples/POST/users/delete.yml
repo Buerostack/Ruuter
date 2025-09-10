@@ -1,0 +1,23 @@
+validate:
+  switch:
+    - condition: ${!incoming.body || !incoming.body.userId}
+      next: bad_request
+  next: define_output
+
+define_output:
+  assign:
+    output:
+      userId: ${incoming.body.userId}
+      status: "deleted"
+      at: "${new Date().toISOString()}"
+  next: delete
+
+delete:
+  status: 201
+  return: ${output}
+  next: end
+
+bad_request:
+  status: 400
+  return: Missing required field 'userId'
+  next: end

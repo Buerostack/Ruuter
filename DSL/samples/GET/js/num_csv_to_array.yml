@@ -1,0 +1,19 @@
+extract:
+  assign:
+    list: ${incoming.params.list ?? ""}
+    arr: ${ list.split(",").map(s => s.trim()).filter(s => s.length > 0).map(Number).filter(n => !Number.isNaN(n)) }
+
+define_output:
+  assign:
+    output:
+      input: ${list}
+      parsed: ${arr}
+      count: ${arr.length}
+      uniqueCount: ${[...new Set(arr)].length}
+      evenCount: ${arr.filter(n => n % 2 === 0).length}
+      unevenCount: ${arr.filter(n => n % 2 != 0).length}
+      sum: ${arr.reduce((a,b) => a+b, 0)}
+
+response:
+  return: ${output}
+  next: end

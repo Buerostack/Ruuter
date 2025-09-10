@@ -1,0 +1,13 @@
+extract:
+  assign:
+    trace: ${ incoming.headers?.["x-trace-id"] ?? incoming.headers?.["X-Trace-Id"] ?? "N/A" }
+    userAgent: ${ incoming.headers?.["user-agent"] ?? null }
+
+define_output:
+  assign:
+    output:
+      traceId: ${trace}
+      userAgent: ${userAgent}
+
+response:
+  return: ${output}

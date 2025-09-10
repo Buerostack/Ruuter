@@ -1,0 +1,4 @@
+response:
+  wrapper: false
+  return: This output will be provided as plaintext
+  next: end

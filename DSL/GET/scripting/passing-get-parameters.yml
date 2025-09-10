@@ -1,2 +1,0 @@
-first_step:
-  return: ${incoming.params.varFromDSL} AND ${incoming.params.queryVal}
