@@ -1,0 +1,19 @@
+{
+  "name": "ruuter-basic-endpoint-example",
+  "version": "1.0.0",
+  "description": "Basic endpoint example for Ruuter",
+  "scripts": {
+    "test": "bash test.sh"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "curl": "^0.1.4"
+  },
+  "keywords": [
+    "ruuter",
+    "example",
+    "dsl"
+  ],
+  "author": "Rainer Türner",
+  "license": "MIT"
+}
