@@ -1,0 +1,53 @@
+#declaration:
+#  operationId: demoMockUser
+#  summary: Create a mock user (reqres.in)
+#  description: Posts to https://reqres.in/api/users and returns the upstream JSON (id, createdAt, etc.).
+#  method: POST
+#  path: /demo/mock-user
+#  tags: [demo, external, reqres]
+
+#build_input:
+#  assign:
+#    name: ${incoming.body?.name ?? "Morpheus"}
+#    job: ${incoming.body?.job ?? "Leader"}
+#  next: post_remote
+
+post_remote:
+  call: http.post
+  args:
+    #url: https://reqres.in/api/users
+    url: "[#TMP_URL]/api/users"
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    body:
+      name: ${name}
+      job: ${job}
+  result: res
+  #next: handle_res
+  next: response
+
+response:
+  return: ${res}
+  next: end
+
+#handle_res:
+#  switch:
+#    - condition: ${res.response.statusCodeValue >= 200 && res.response.statusCodeValue < 300}
+#      next: ok
+#  next: upstream_error
+
+#ok:
+#  wrapper: false
+#  status: 200
+#  return: ${res.response.body}
+#  next: end
+
+#upstream_error:
+#  wrapper: false
+#  status: ${res.response.statusCodeValue ?? 502}
+#  return:
+#    error: "Upstream error"
+#    status: ${res.response.statusCodeValue ?? null}
+#    body: ${res.response.body ?? null}
+#  next: end

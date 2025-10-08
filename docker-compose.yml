@@ -6,11 +6,13 @@ services:
       context: .
     volumes:
       - ./DSL:/DSL
+      - ./constants.ini:/app/constants.ini
     ports:
       - 8080:8080
     networks:
-      - ruuter
+      - bykstack
 
 networks:
-  ruuter:
+  bykstack:
+    name: bykstack
     driver: bridge

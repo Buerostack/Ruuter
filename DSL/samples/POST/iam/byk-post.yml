@@ -1,0 +1,16 @@
+response:
+  return: My response
+  next: end
+
+db_request:
+  call: http.post
+  args:
+    url: "[#LOCAL_RESQL]/dev/iam/account/list"
+    body:
+      some: value
+  result: res_db
+  next: response
+
+response:
+  return: ${res.response.body}
+  next: end

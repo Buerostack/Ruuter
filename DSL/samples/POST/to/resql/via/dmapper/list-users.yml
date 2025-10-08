@@ -1,0 +1,20 @@
+db_request:
+  call: http.post
+  args:
+    url: "[#LOCAL_RESQL]/dev/iam/account/list"
+  result: db_response
+
+map_with_datamapper:
+  call: http.post
+  args:
+    url: "http://datamapper:3000/users/list"
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    body:
+      rows: ${db_response.response.body}
+  result: mapped
+
+response:
+  return: ${mapped.response}
+  #return: ${db_response.response.body}

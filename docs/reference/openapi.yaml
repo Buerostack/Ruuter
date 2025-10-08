@@ -1,0 +1,295 @@
+openapi: 3.1.0
+info:
+  title: Ruuter DSL Router API
+  version: 1.0.0
+  description: |
+    Ruuter dynamically generates REST API endpoints from YAML DSL files.
+    Endpoints are created by placing YAML configuration files in the DSL/ directory.
+
+    This OpenAPI specification documents the pattern and structure of how Ruuter
+    exposes endpoints, but actual endpoints depend on your DSL configuration.
+  contact:
+    name: Rainer Türner
+    url: https://github.com/buerostack/ruuter
+  license:
+    name: MIT
+    url: https://github.com/buerostack/ruuter/blob/main/LICENSE
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+  - url: https://api.example.com
+    description: Production server (configure as needed)
+
+tags:
+  - name: dynamic-endpoints
+    description: Endpoints generated from DSL files
+  - name: health
+    description: System health and monitoring
+
+paths:
+  /health:
+    get:
+      tags:
+        - health
+      summary: Health check endpoint
+      description: Returns the health status of the Ruuter service
+      operationId: getHealth
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: '2025-10-08T12:00:00Z'
+
+  /{dynamicPath}:
+    get:
+      tags:
+        - dynamic-endpoints
+      summary: Dynamic GET endpoint
+      description: |
+        Endpoints are created by placing YAML files in DSL/GET/ directory.
+        The file path maps to the URL path.
+        Example: DSL/GET/users/list.yml creates GET /users/list
+      operationId: dynamicGet
+      parameters:
+        - name: dynamicPath
+          in: path
+          required: true
+          description: Path defined by DSL file location
+          schema:
+            type: string
+          example: users/list
+        - name: queryParams
+          in: query
+          required: false
+          description: Query parameters accessible in DSL via ${request.params.*}
+          schema:
+            type: object
+          style: form
+          explode: true
+      responses:
+        '200':
+          description: Successful response (structure defined in DSL)
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Response structure defined in DSL file
+              example:
+                data: []
+                status: success
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Endpoint not found (no matching DSL file)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - dynamic-endpoints
+      summary: Dynamic POST endpoint
+      description: |
+        Endpoints are created by placing YAML files in DSL/POST/ directory.
+        The file path maps to the URL path.
+        Example: DSL/POST/users/create.yml creates POST /users/create
+      operationId: dynamicPost
+      parameters:
+        - name: dynamicPath
+          in: path
+          required: true
+          description: Path defined by DSL file location
+          schema:
+            type: string
+          example: users/create
+      requestBody:
+        description: Request body accessible in DSL via ${request.body.*}
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Request structure defined by DSL validation rules
+            example:
+              userId: "123"
+              name: "John Doe"
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                result: success
+                id: "123"
+        '201':
+          description: Resource created
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Endpoint not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - dynamic-endpoints
+      summary: Dynamic PUT endpoint
+      description: |
+        Endpoints are created by placing YAML files in DSL/PUT/ directory.
+      operationId: dynamicPut
+      parameters:
+        - name: dynamicPath
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Successful update
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - dynamic-endpoints
+      summary: Dynamic DELETE endpoint
+      description: |
+        Endpoints are created by placing YAML files in DSL/DELETE/ directory.
+      operationId: dynamicDelete
+      parameters:
+        - name: dynamicPath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: deleted
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: Invalid request
+        message:
+          type: string
+          description: Detailed error description
+          example: Required field 'userId' is missing
+        code:
+          type: string
+          description: Error code
+          example: VALIDATION_ERROR
+        timestamp:
+          type: string
+          format: date-time
+          example: '2025-10-08T12:00:00Z'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token authentication (if configured in DSL)
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key authentication (if configured in DSL)
+
+security:
+  - bearerAuth: []
+  - apiKey: []

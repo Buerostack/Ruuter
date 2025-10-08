@@ -1,0 +1,8 @@
+request_to_dmapper:
+  call: http.post
+  args:
+    url: http://datamapper:3000/samples/ping
+  result: response_dmapper
+
+response:
+  return: ${response_dmapper.response}
