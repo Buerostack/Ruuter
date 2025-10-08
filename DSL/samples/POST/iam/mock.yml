@@ -1,0 +1,17 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'WIDGET-DATA'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: samples
+
+db_request:
+  call: http.post
+  args:
+    url: "[#LOCAL_RESQL]/dev/iam/account/list"
+  result: db_response
+
+response:
+  return: ${db_response.response.body}

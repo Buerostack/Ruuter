@@ -1,0 +1,26 @@
+#response:
+#  return: I was here
+#  next: end
+
+getUser:
+  call: http.post
+  args:
+    url: "[#CHATBOT_RESQL]/backoffice/get-user"
+    body:
+      userIdCode: ${userIdCode}
+  result: res
+  next: end
+
+list_users:
+  call: http.post
+  args:
+    url: "http://localhost:8082/dev/iam/account/list"
+    body:
+      temp: value
+  result: users_list
+  next: respond
+
+respond:
+  wrapper: false
+  return: ${users_list.response.body}
+  next: end

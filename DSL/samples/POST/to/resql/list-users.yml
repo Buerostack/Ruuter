@@ -1,0 +1,8 @@
+db_request:
+  call: http.post
+  args:
+    url: "[#LOCAL_RESQL]/dev/iam/account/list"
+  result: db_response
+
+response:
+  return: ${db_response.response.body}
